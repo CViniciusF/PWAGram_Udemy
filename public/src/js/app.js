@@ -1,4 +1,10 @@
 var defferredPrompt
+
+//polyfill
+if (!window.Promise) {
+  window.Promise = Promise;
+}
+
 if ('serviceWorker' in navigator) {
   /* Registering serviceWorker only if the browser (navigator) has the property in it
   it is a Promise
@@ -16,10 +22,10 @@ if ('serviceWorker' in navigator) {
 
 // Before asking to add the application to homescreen, we can preventDefault
 window.addEventListener('beforeinstallprompt', function(event) {
-  console.log('beforeinstallprompt fired')
-  event.preventDefault()
-  defferredPrompt = event
-  return false
+  console.log('beforeinstallprompt fired');
+  event.preventDefault();
+  defferredPrompt = event;
+  return false;
 })
 
 //Promises study.
@@ -36,64 +42,64 @@ window.addEventListener('beforeinstallprompt', function(event) {
 
 //Fetch study.
 //GET
-fetch('https://httpbin.org/ip')
-  .then((response) => {
-    console.log(response);
-    //As the response from the api is a ReadableStream, we need to parse it
-    // to a js object, and it is an async task, so we can chain a .then()
-    return response.json();
-  })
-  .then((data) => {
-    console.log(data);
-  })
-  .catch((err) => {
-    console.log(err);
-  })
+// fetch('https://httpbin.org/ip')
+//   .then((response) => {
+//     console.log(response);
+//     //As the response from the api is a ReadableStream, we need to parse it
+//     // to a js object, and it is an async task, so we can chain a .then()
+//     return response.json();
+//   })
+//   .then((data) => {
+//     console.log(data);
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   })
 
 //POST
-fetch('https://httpbin.org/post', {
-  //options for the request
-  //GET is default for method property
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    //it depends on the API, we dont need to manually set it
-    'Accept': 'application/json'
-  },
-  //mode: cors, no-cors
+// fetch('https://httpbin.org/post', {
+//   //options for the request
+//   //GET is default for method property
+//   method: 'POST',
+//   headers: {
+//     'Content-Type': 'application/json',
+//     //it depends on the API, we dont need to manually set it
+//     'Accept': 'application/json'
+//   },
+//   //mode: cors, no-cors
 
-  //we need json.stringify here because we are sending a Javascript Object,
-  //but the content type is set to application/json so we need to parse it to JSON
-  body: JSON.stringify({
-    message: 'Does this works?'
-  })
-})
-  .then((response) => {
-    console.log(response);
-    //As the response from the api is a ReadableStream, we need to parse it
-    // to a js object, and it is an async task, so we can chain a .then()
-    return response.json();
-  })
-  .then((data) => {
-    console.log(data);
-  })
-  .catch((err) => {
-    console.log(err);
-  })
+//   //we need json.stringify here because we are sending a Javascript Object,
+//   //but the content type is set to application/json so we need to parse it to JSON
+//   body: JSON.stringify({
+//     message: 'Does this works?'
+//   })
+// })
+//   .then((response) => {
+//     console.log(response);
+//     //As the response from the api is a ReadableStream, we need to parse it
+//     // to a js object, and it is an async task, so we can chain a .then()
+//     return response.json();
+//   })
+//   .then((data) => {
+//     console.log(data);
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   })
 
 //AJAX vs FETCH
 
 //Ajax doesn't works on SWs because it uses a lot of synchronous code
-var xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://httpbin.org/ip');
-xhr.responseType = 'json';
+// var xhr = new XMLHttpRequest();
+// xhr.open('GET', 'https://httpbin.org/ip');
+// xhr.responseType = 'json';
 
-xhr.onload = function() {
-  console.log(xhr.response);
-}
+// xhr.onload = function() {
+//   console.log(xhr.response);
+// }
 
-xhr.onerror = function() {
-  console.log('Error');
-}
-//this makes the call
-xhr.send();
+// xhr.onerror = function() {
+//   console.log('Error');
+// }
+// //this makes the call
+// xhr.send();
