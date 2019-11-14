@@ -21,13 +21,13 @@ function trimCache(cacheName, maxItems) {
   caches.open(cacheName)
     .then((cache) => {
       return cache.keys()
-      .then((keys) => {
-        if (keys.length > maxItems) {
-          //remove older item from cache
-          cache.delete(keys[0])
-            .then(trimCache(cacheName, maxItems));
-        }
-      })
+        .then((keys) => {
+          if (keys.length > maxItems) {
+            //remove older item from cache
+            cache.delete(keys[0])
+              .then(trimCache(cacheName, maxItems));
+          }
+        })
     })
 }
 
@@ -35,7 +35,7 @@ function trimCache(cacheName, maxItems) {
 Ofc you dont have access to the DOM.
 */
 /* Install is fired when browser installs the sw */
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
   console.log('[SW] Installing...', event)
   //Cache API
 
@@ -53,7 +53,7 @@ self.addEventListener('install', function(event) {
 
 /* Activate is fired when browser not just install but activate the sw */
 /* which means that you need to close the tab and reopen it to activate a new version of sw */
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys()
       .then((keyList) => {
@@ -78,8 +78,8 @@ function isInArray(string, array) {
 }
 
 /* Every fetch event pass through this event, and so you can manipulate the response */
-self.addEventListener('fetch', function(event) {
-  var url = 'https://httpbin.org/get';
+self.addEventListener('fetch', function (event) {
+  var url = 'https://pwagram-776e4.firebaseio.com/posts';
   //if is this url we want to cache it always to get updated content
   //cache then network
   if (event.request.url.indexOf(url) > -1) {
@@ -121,17 +121,17 @@ self.addEventListener('fetch', function(event) {
                     cache.put(event.request.url, res.clone())
                     return res;
                   })
-                })
-                .catch((err) => {
-                  //if its not cached and we can't retrieve it from server too (offline)
-                  //get offline.html from cache
-                  return caches.open(CACHE_STATIC_NAME)
-                    .then((cache) => {
-                      if (event.request.headers.get('accept').includes('text/html')) {
-                        return cache.match('/offline.html');
-                      }
-                    })
-                })
+              })
+              .catch((err) => {
+                //if its not cached and we can't retrieve it from server too (offline)
+                //get offline.html from cache
+                return caches.open(CACHE_STATIC_NAME)
+                  .then((cache) => {
+                    if (event.request.headers.get('accept').includes('text/html')) {
+                      return cache.match('/offline.html');
+                    }
+                  })
+              })
           }
         })
     );

@@ -9,7 +9,7 @@ function openCreatePostModal() {
   createPostArea.style.display = 'block'
   if (defferredPrompt) {
     defferredPrompt.prompt();
-    defferredPrompt.userChoice.then(function(choiceResult) {
+    defferredPrompt.userChoice.then(function (choiceResult) {
       console.log(choiceResult.outcome)
       if (choiceResult.outcome === 'dismissed') {
         console.log('User canceled installation')
@@ -19,6 +19,16 @@ function openCreatePostModal() {
     })
     /*If the user refused one time we cant ask for it anymore */
     defferredPrompt = null
+  }
+  //code for unregister all service workers
+  //if you unregister, the cache is cleared too
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations()
+      .then((registrations) => {
+        for (let i = 0; i < registrations.length; i++) {
+          // registrations[i].unregister()
+        }
+      })
   }
 }
 
@@ -43,12 +53,12 @@ function onSaveButtonClicked(event) {
 }
 
 function clearCards() {
-  while(sharedMomentsArea.hasChildNodes()) {
+  while (sharedMomentsArea.hasChildNodes()) {
     sharedMomentsArea.removeChild(sharedMomentsArea.lastChild);
   }
 }
 
-function createCard() {
+function createCard(data) {
   var cardWrapper = document.createElement('div');
   cardWrapper.className = 'shared-moment-card mdl-card mdl-shadow--2dp';
   var cardTitle = document.createElement('div');
@@ -74,14 +84,20 @@ function createCard() {
   sharedMomentsArea.appendChild(cardWrapper);
 }
 
-var url = 'https://httpbin.org/get';
+function updateUI(data) {
+  for (let index = 0; index < data.length; index++) {
+    createCard(data[index]);
+  }
+}
+
+var url = 'https://pwagram-776e4.firebaseio.com/posts.json';
 var networkDataReceived = false;
 
 fetch(url)
-  .then(function(res) {
+  .then(function (res) {
     return res.json();
   })
-  .then(function(data) {
+  .then(function (data) {
     networkDataReceived = true;
     console.log('From web', data);
     clearCards();
@@ -90,12 +106,12 @@ fetch(url)
 
 if ('caches' in window) {
   caches.match(url)
-    .then(function(response) {
+    .then(function (response) {
       if (response) {
         return response.json();
       }
     })
-    .then(function(data) {
+    .then(function (data) {
       console.log('From cache', data);
       if (!networkDataReceived) {
         clearCards();
