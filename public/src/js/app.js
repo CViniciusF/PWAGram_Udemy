@@ -1,31 +1,31 @@
-var defferredPrompt
+let defferredPrompt
 
 //polyfill
 if (!window.Promise) {
-  window.Promise = Promise;
+  window.Promise = Promise
 }
 
-if ('serviceWorker' in navigator) {
+if ("serviceWorker" in navigator) {
   /* Registering serviceWorker only if the browser (navigator) has the property in it
   it is a Promise
   for the register() it can receive a second parameter that is an object with scope property
    they only work when served by https (localhost is an exception) */
   navigator.serviceWorker
-    .register('/sw.js')
-    .then(function() {
-      console.log('Service worker registered')
+    .register("/sw.js")
+    .then(function () {
+      console.log("Service worker registered")
     })
-    .catch(function(err) {
-      console.log(err);
-    });
+    .catch(function (err) {
+      console.log(err)
+    })
 }
 
 // Before asking to add the application to homescreen, we can preventDefault
-window.addEventListener('beforeinstallprompt', function(event) {
-  console.log('beforeinstallprompt fired');
-  event.preventDefault();
-  defferredPrompt = event;
-  return false;
+window.addEventListener("beforeinstallprompt", function (event) {
+  console.log("beforeinstallprompt fired")
+  event.preventDefault()
+  defferredPrompt = event
+  return false
 })
 
 //Promises study.
